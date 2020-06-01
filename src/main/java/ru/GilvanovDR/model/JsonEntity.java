@@ -47,4 +47,20 @@ public class JsonEntity {
     public void setType(String type) {
         this.type = Type.getType(type);
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public JsonEntity getChildren(int childrenNum) {
+        return children.get(childrenNum);
+    }
+
+    public JsonEntity getLastChildren() {
+        return children.get(children.size()-1);
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

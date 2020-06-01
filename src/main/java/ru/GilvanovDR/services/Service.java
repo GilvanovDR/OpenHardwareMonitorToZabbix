@@ -9,14 +9,13 @@ import ru.GilvanovDR.model.JsonEntity;
 import ru.GilvanovDR.repository.RepoInterface;
 import ru.GilvanovDR.repository.embeddedRepo;
 
-import java.io.IOException;
-
 
 public class Service implements ServiceInterface {
     RepoInterface repo = new embeddedRepo();
-    OpenHWGetter openHWGetter = new OpenHWGetter(this);
+    //OpenHWGetter openHWGetter = new OpenHWGetter(this);
     private static final Logger log = Logger.getLogger(Service.class);
-     public Service() {
+
+    public Service() {
         // openHWGetter.start();
     }
 
@@ -34,7 +33,17 @@ public class Service implements ServiceInterface {
     public String getJson(String ip) {
         JsonEntity jsonEntity = JsonReader.readJsonFromUrl("http://" + ip + ":8085/data.json");
         if (jsonEntity != null) {
-            return jsonEntity.toString();
+            return jsonEntity.getChildren(0).getText() + "(" + ip + ")" + '\n'
+                    //MbName(Chipset)
+                    + jsonEntity.getChildren(0).getChildren(0).getText()
+                    + "(" + jsonEntity.getChildren(0).getChildren(0).getChildren(0).getText() + ")" + '\n'
+                    //CpuName
+                    + jsonEntity.getChildren(0).getChildren(1).getText()  +  '\n'
+                    + "Cpu used: " +  jsonEntity.getChildren(0).getChildren(1).getChildren(2).getChildren(0).getValue() + '\n'
+                    + "Cpu temp: " + jsonEntity.getChildren(0).getChildren(1).getChildren(1).getLastChildren().getValue() + '\n'
+                    //MemStatus
+                    + "Memory Used: " + jsonEntity.getChildren(0).getChildren(2).getChildren(1).getChildren(0).getValue()+ '\n'
+                    + "Memory Free: " + jsonEntity.getChildren(0).getChildren(2).getChildren(1).getChildren(1).getValue();
         } else return "Null";
     }
 }

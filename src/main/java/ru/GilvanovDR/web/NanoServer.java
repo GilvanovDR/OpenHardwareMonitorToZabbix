@@ -24,12 +24,13 @@ public class NanoServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         String ip;
         StringTokenizer st = new StringTokenizer(session.getUri(), "/");
+
         if (st.hasMoreTokens() && !"favicon.ico".equals(ip = st.nextToken()) && IPUtil.ipValidate(ip)) {
             log.info("GET " + session.getUri());
-            return newFixedLengthResponse(String.valueOf(service.getJson(ip)));
+            return newFixedLengthResponse(Response.Status.OK, mimeTypes().get("txt"), String.valueOf(service.getJson(ip)));
         }
         log.debug("GET(BAD_REQUEST) " + session.getUri());
-        return newFixedLengthResponse("BAD_REQUEST");
+        return newFixedLengthResponse(Response.Status.NOT_FOUND, NanoHTTPD.mimeTypes().get("txt"), "NOT_FOUND");
     }
 
 }
